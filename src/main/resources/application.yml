@@ -1,0 +1,36 @@
+server:
+  port: 8000
+
+eureka:
+  client:
+    register-with-eureka: true # spring cloud netflix eureka와 연동할때는 true로 바꾼다.
+    fetch-registry: true # spring cloud netflix eureka와 연동할때는 true로 바꾼다.
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  application:
+    name: apigateway-service
+  cloud: # localhost:8000/first-service/welcome을 입력하면 localhost:8081/first-service/welcome 로 자동으로 이동된다.
+    gateway:
+#      default-filters: # global filter 등록
+#        - name: GlobalFilter
+#          args:
+#            baseMessage: Spring Cloud Gateway Global Filter
+#            preLogger: true
+#            postLogger: true
+      routes:
+        - id: user-service
+          #          uri: http://localhost:8082/
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/**
+          filters:
+            #            - AddRequestHeader=second-request, second-request-header2 # 앞의 값이 key고 뒤의 값이 value이다.
+            #            - AddResponseHeader=second-response, second-response-header2
+#            - name: CustomFilter # 복수개의 필터를 설정하는 경우 name:을 작성해야한다.
+#            - name: LoggingFilter
+#              args:
+#                baseMessage: Spring Cloud Gateway Logging Filter
+#                preLogger: true
+#                postLogger: true
