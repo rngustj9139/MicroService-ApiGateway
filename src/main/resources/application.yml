@@ -21,11 +21,10 @@ spring:
 #            postLogger: true
       routes:
         - id: user-service
-          #          uri: http://localhost:8082/
           uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/**
-          filters:
+#          filters:
             #            - AddRequestHeader=second-request, second-request-header2 # 앞의 값이 key고 뒤의 값이 value이다.
             #            - AddResponseHeader=second-response, second-response-header2
 #            - name: CustomFilter # 복수개의 필터를 설정하는 경우 name:을 작성해야한다.
@@ -34,3 +33,7 @@ spring:
 #                baseMessage: Spring Cloud Gateway Logging Filter
 #                preLogger: true
 #                postLogger: true
+        - id: catalog-service
+          uri: lb://CATALOG-SERVICE
+          predicates:
+            - Path=/catalog-service/**
