@@ -13,17 +13,7 @@ spring:
     name: apigateway-service
   cloud: # localhost:8000/first-service/welcome을 입력하면 localhost:8081/first-service/welcome 로 자동으로 이동된다.
     gateway:
-#      default-filters: # global filter 등록
-#        - name: GlobalFilter
-#          args:
-#            baseMessage: Spring Cloud Gateway Global Filter
-#            preLogger: true
-#            postLogger: true
       routes:
-#        - id: user-service
-#          uri: lb://USER-SERVICE
-#          predicates:
-#            - Path=/user-service/**
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
@@ -33,30 +23,21 @@ spring:
             - RemoveRequestHeader=Cookie # post로 전달되는 데이터값을 매번 새로운 데이터로 인식하기위해 헤더값 삭제
             - RewritePath=/user-service/(?<segment>.*), /$\{segment} # 브라우저 uri에서 /user/service/~~~~ 로 들어오는 요청에대해서 /user/service/ 부분을 지운 uri로 바꾼다.
         - id: user-service
-            uri: lb://USER-SERVICE
-            predicates:
-              - Path=/user-service/users # 회원가입
-              - Method=POST
-            filters:
-              - RemoveRequestHeader=Cookie # post로 전달되는 데이터값을 매번 새로운 데이터로 인식하기위해 헤더값 삭제
-              - RewritePath=/user-service/(?<segment>.*), /$\{segment} # 브라우저 uri에서 /user/service/~~~~ 로 들어오는 요청에대해서 /user/service/ 부분을 지운 uri로 바꾼다.
-         - id: user-service
-             uri: lb://USER-SERVICE
-             predicates:
-               - Path=/user-service/** # 로그인, 회원가입 외 나머지
-               - Method=GET
-             filters:
-               - RemoveRequestHeader=Cookie # post로 전달되는 데이터값을 매번 새로운 데이터로 인식하기위해 헤더값 삭제
-               - RewritePath=/user-service/(?<segment>.*), /$\{segment} # 브라우저 uri에서 /user/service/~~~~ 로 들어오는 요청에대해서 /user/service/ 부분을 지운 uri로 바꾼다.
-#          filters:
-            #            - AddRequestHeader=second-request, second-request-header2 # 앞의 값이 key고 뒤의 값이 value이다.
-            #            - AddResponseHeader=second-response, second-response-header2
-#            - name: CustomFilter # 복수개의 필터를 설정하는 경우 name:을 작성해야한다.
-#            - name: LoggingFilter
-#              args:
-#                baseMessage: Spring Cloud Gateway Logging Filter
-#                preLogger: true
-#                postLogger: true
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/users # 회원가입
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie # post로 전달되는 데이터값을 매번 새로운 데이터로 인식하기위해 헤더값 삭제
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment} # 브라우저 uri에서 /user/service/~~~~ 로 들어오는 요청에대해서 /user/service/ 부분을 지운 uri로 바꾼다.
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/** # 로그인, 회원가입 외 나머지
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie # post로 전달되는 데이터값을 매번 새로운 데이터로 인식하기위해 헤더값 삭제
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment} # 브라우저 uri에서 /user/service/~~~~ 로 들어오는 요청에대해서 /user/service/ 부분을 지운 uri로 바꾼다.
         - id: catalog-service
           uri: lb://CATALOG-SERVICE
           predicates:
