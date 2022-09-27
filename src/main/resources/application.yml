@@ -20,10 +20,34 @@ spring:
 #            preLogger: true
 #            postLogger: true
       routes:
+#        - id: user-service
+#          uri: lb://USER-SERVICE
+#          predicates:
+#            - Path=/user-service/**
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/user-service/**
+            - Path=/user-service/login # 로그인
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie # post로 전달되는 데이터값을 매번 새로운 데이터로 인식하기위해 헤더값 삭제
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment} # 브라우저 uri에서 /user/service/~~~~ 로 들어오는 요청에대해서 /user/service/ 부분을 지운 uri로 바꾼다.
+        - id: user-service
+            uri: lb://USER-SERVICE
+            predicates:
+              - Path=/user-service/users # 회원가입
+              - Method=POST
+            filters:
+              - RemoveRequestHeader=Cookie # post로 전달되는 데이터값을 매번 새로운 데이터로 인식하기위해 헤더값 삭제
+              - RewritePath=/user-service/(?<segment>.*), /$\{segment} # 브라우저 uri에서 /user/service/~~~~ 로 들어오는 요청에대해서 /user/service/ 부분을 지운 uri로 바꾼다.
+         - id: user-service
+             uri: lb://USER-SERVICE
+             predicates:
+               - Path=/user-service/** # 로그인, 회원가입 외 나머지
+               - Method=GET
+             filters:
+               - RemoveRequestHeader=Cookie # post로 전달되는 데이터값을 매번 새로운 데이터로 인식하기위해 헤더값 삭제
+               - RewritePath=/user-service/(?<segment>.*), /$\{segment} # 브라우저 uri에서 /user/service/~~~~ 로 들어오는 요청에대해서 /user/service/ 부분을 지운 uri로 바꾼다.
 #          filters:
             #            - AddRequestHeader=second-request, second-request-header2 # 앞의 값이 key고 뒤의 값이 value이다.
             #            - AddResponseHeader=second-response, second-response-header2
