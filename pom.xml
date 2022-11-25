@@ -64,6 +64,21 @@
 			<artifactId>reactor-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency> <!-- spring cloud config server 사용을 위해 필요한 의존성 -->
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+
+		<dependency> <!-- spring cloud config server 사용을 위해 필요한 의존성 -->
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId> <!-- 깃에 저장된 ecommerce.yml의 내용을 변경할때마다 user-service를 재가동해야함 이런 불펀을 해결하기위해 애플리케이션 변경을 모니터링하는 actuator나 spring cloud bus가 필요하다 -->
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>

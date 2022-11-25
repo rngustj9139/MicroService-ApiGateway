@@ -39,6 +39,14 @@ spring:
             - RemoveRequestHeader=Cookie # post로 전달되는 데이터값을 매번 새로운 데이터로 인식하기위해 헤더값 삭제
             - RewritePath=/user-service/(?<segment>.*), /$\{segment} # 브라우저 uri에서 /user/service/~~~~ 로 들어오는 요청에대해서 /user/service/ 부분을 지운 uri로 바꾼다.
             - AuthorizationHeaderFilter # 로그인, 회원가입 외 나머지 기능은 jwt를 검사하는 필터를 거쳐야한다. (pom.xml에 두개의 dependency 추가해야함)
+        - id: user-service # actuator 설정
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/actuator/** # 로그인, 회원가입 외 나머지
+            - Method=GET, POST
+          filters:
+            - RemoveRequestHeader=Cookie # post로 전달되는 데이터값을 매번 새로운 데이터로 인식하기위해 헤더값 삭제
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment} # 브라우저 uri에서 /user/service/~~~~ 로 들어오는 요청에대해서 /user/service/ 부분을 지운 uri로 바꾼다.
         - id: catalog-service
           uri: lb://CATALOG-SERVICE
           predicates:
@@ -47,6 +55,12 @@ spring:
           uri: lb://ORDER-SERVICE
           predicates:
             - Path=/order-service/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, httptrace # httptrace는 MicroServiceApiGatewayApplication.class에서 빈으로 등록해야함
 
 token:
   expiration_time: 86400000
